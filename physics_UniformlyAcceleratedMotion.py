@@ -46,16 +46,16 @@ TITLE = "두 자동차 A, B의 등가속도 운동"
 NA = 3
 
 PROBLEM = (
-    "문제) 직선 도로에서 자동차 A, B가 나란히\n"
+    "문제) 직선 도로에서 빨간 자동차 A, 파란 자동차 B가 나란히\n"
     "각각 $3v$, $v$의 속력으로 기준선 P를 통과한 후,\n"
     "각각 등가속도 운동하여 기준선 Q에 동시에 도달하였다.\n"
     "(A는 Q에서 정지, P와 Q 사이의 거리는 $L$)\n"
-    "P를 통과하여 Q에 도달할 때까지 옳은 것만을\n"
-    "<보기>에서 있는 대로 고른 것은?\n"
-    "ㄱ. B의 속력은 증가한다.\n"
-    "ㄴ. 가속도의 크기는 A가 B의 2배이다.\n"
-    "ㄷ. A와 B 사이의 거리는\n"
-    "     최대 $L/3$까지 증가한다.\n"
+    "P를 통과하여 Q에 도달할 때까지 옳은 것만을 \n"
+    "<보기> 에서 있는 대로 고른 것은?\n"
+    "  ㄱ. B의 속력은 증가한다.\n"
+    "  ㄴ. 가속도의 크기는 A가 B의 2배이다.\n"
+    "  ㄷ. A와 B 사이의 거리는 최대 $L/3$까지 증가한다.\n"
+    "  \n"
     "① ㄱ   ② ㄴ   ③ ㄱ,ㄷ   ④ ㄴ,ㄷ   ⑤ ㄱ,ㄴ,ㄷ"
 )
 
@@ -163,11 +163,11 @@ add_text(
     0.028,
     0.905,
     PROBLEM,
-    16.2,
+    16.4,
     color=PROBLEM_COLOR,
     weight="bold",
     va="top",
-    linespacing=1.2,
+    linespacing=1.3,
 )
 
 # ----- 7. 핵심 공식 안내 -----
@@ -194,16 +194,16 @@ result_text = add_text(
 
 # 상세 풀이 패널: 마우스를 올렸을 때만 오른쪽 그래프 위에 나타난다
 detail_box = add_box(
-    0.435, 0.100, 0.550, 0.800, fc="white", ec=PROBLEM_COLOR, lw=3, zorder=20
+    0.435, 0.075, 0.550, 0.835, fc="white", ec=PROBLEM_COLOR, lw=3, zorder=20
 )
 detail_box.set_visible(False)
-DETAIL_TOP = 0.885  # 첫 줄 위치
-DETAIL_STEP = 0.0258  # 줄 간격 (화면 높이 비율, 글꼴과 상관없이 고정)
-DETAIL_MAX_LINES = 30
+DETAIL_TOP = 0.895  # 첫 줄 위치
+DETAIL_STEP = 0.0208  # 줄 간격 (화면 높이 비율, 글꼴과 상관없이 고정)
+DETAIL_MAX_LINES = 40
 detail_lines = []
 for _i in range(DETAIL_MAX_LINES):
     _t = add_text(
-        0.450, DETAIL_TOP - _i * DETAIL_STEP, "", 16, va="top", zorder=21
+        0.450, DETAIL_TOP - _i * DETAIL_STEP, "", 14, va="top", zorder=21
     )
     _t.set_visible(False)
     detail_lines.append(_t)
@@ -525,7 +525,7 @@ def answer_summary(v, L, T):
 
 
 def detail_solution(v, L, T):
-    """오른쪽 패널: 풀이 과정 (지금 화면의 숫자로 계산)"""
+    """오른쪽 패널: 풀이 과정 (문자로 먼저, 지금 화면의 숫자로 다시 계산)"""
     vA0 = NA * v
     avg = vA0 / 2
     vB = (NA - 1) * v
@@ -535,36 +535,48 @@ def detail_solution(v, L, T):
     xA = vA0 * t_star - 0.5 * aA * t_star**2
     xB = v * t_star + 0.5 * aB * t_star**2
     gmax = xA - xB
+    tri = 0.5 * t_star * (vA0 - v)
+    xA_end = vA0 * T - 0.5 * aA * T**2
+    xB_end = v * T + 0.5 * aB * T**2
     return (
-        f"모범답안 · 상세 풀이    (지금 화면의 값  v = {g(v)} m/s,  L = {g(L)} m)\n"
+        "모범답안 · 상세 풀이\n"
+        f"※ 문제에는 문자(v, L)만 주어진다.  v = {g(v)} m/s,  L = {g(L)} m 는 계산하기 쉬운 예시 숫자이다.\n"
         "\n"
-        "[1단계] 주어진 것 정리\n"
-        f"   A : P에서 {g(vA0)} m/s  →  Q에서 0 (정지)\n"
-        f"   B : P에서 {g(v)} m/s  →  Q에서의 속력 v_B 는 모른다\n"
-        f"   두 차는 같은 시간 T 동안 같은 거리 L = {g(L)} m 를 이동\n"
+        "[0단계] 문제에서 알 수 있는 것  (숫자가 아니라 '관계')\n"
+        "   · 동시에 도달 → 걸린 시간 T 가 같다.    P → Q 이므로 이동 거리 L 도 같다.\n"
+        "   · A : 3v → 0 (정지)       B : v → v_B  (Q에서의 속력은 모른다)\n"
+        "   · 쓸 공식 :  거리 = 평균 속력 × 시간,   평균 속력 = (처음 + 나중) ÷ 2\n"
+        "                가속도 a = (나중 - 처음) ÷ 시간,   속력 v = v0 + a t\n"
         "\n"
-        "[2단계] 걸린 시간 T  (A의 평균 속력 이용)\n"
-        f"   평균 속력 = (처음 + 나중) ÷ 2 = ({g(vA0)} + 0) ÷ 2 = {g(avg)} m/s\n"
-        f"   거리 = 평균 속력 × 시간  →  {g(L)} = {g(avg)} × T  →  T = {g(T)} s\n"
+        "[1단계] 걸린 시간 T  (A의 평균 속력 이용)\n"
+        "   문자 : L = (3v + 0) ÷ 2 × T = 1.5v × T    →    T = L ÷ 1.5v\n"
+        f"   숫자 : {g(L)} = {g(avg)} × T    →    T = {g(T)} s      (1.5v = 1.5 × {g(v)} = {g(avg)})\n"
         "\n"
-        "[3단계] B의 나중 속력 v_B  →  ㄱ 판단\n"
-        f"   B도 L, T가 같으므로 평균 속력 = L ÷ T = {g(L)} ÷ {g(T)} = {g(L / T)} m/s\n"
-        f"   ({g(v)} + v_B) ÷ 2 = {g(L / T)}  →  v_B = {g(vB)} m/s\n"
-        f"   {g(v)} → {g(vB)} m/s 로 커졌으므로 B의 속력은 증가  →  ㄱ  ○\n"
+        "[2단계] B의 나중 속력 v_B  →  ㄱ 판단\n"
+        "   B도 L, T 가 같으므로 평균 속력도 같다 :  L ÷ T = 1.5v\n"
+        "   문자 : (v + v_B) ÷ 2 = 1.5v    →    v_B = 2v\n"
+        f"   숫자 : ({g(v)} + v_B) ÷ 2 = {g(L / T)}    →    v_B = {g(vB)} m/s\n"
+        f"   {g(v)} → {g(vB)} m/s 로 커졌으므로 B의 속력은 증가    →    ㄱ  ○\n"
         "\n"
-        "[4단계] 가속도의 크기  →  ㄴ 판단     (a = 속력 변화 ÷ 시간)\n"
-        f"   A : |0 - {g(vA0)}| ÷ {g(T)} = {g(aA)} m/s²\n"
-        f"   B : ({g(vB)} - {g(v)}) ÷ {g(T)} = {g(aB)} m/s²\n"
-        f"   A ÷ B = {g(aA)} ÷ {g(aB)} = {g(aA / aB)} 배  →  2배가 아니다  →  ㄴ  ×\n"
+        "[3단계] 가속도의 크기  →  ㄴ 판단      (a = 속력 변화 ÷ 시간)\n"
+        "   문자 : A = |0 - 3v| ÷ T = 3v/T ,      B = (2v - v) ÷ T = v/T\n"
+        f"   숫자 : A = |0 - {g(vA0)}| ÷ {g(T)} = {g(aA)} ,   B = ({g(vB)} - {g(v)}) ÷ {g(T)} = {g(aB)}   (m/s²)\n"
+        f"   A ÷ B = (3v/T) ÷ (v/T) = {g(aA / aB)} 배  (v, T 는 약분)    →    2배가 아니다    →    ㄴ  ×\n"
+        "   ※ A의 가속도 부호(-)는 '속력이 줄어드는 방향'. '크기'는 부호를 뗀 값으로 비교한다.\n"
         "\n"
-        "[5단계] 두 차 사이의 최대 거리  →  ㄷ 판단\n"
-        "   거리가 가장 클 때 = 두 속력이 같아지는 순간\n"
-        f"   {g(vA0)} - {g(aA)}t = {g(v)} + {g(aB)}t  →  t = {g(t_star)} s  ( = T ÷ 2 )\n"
-        f"   A의 위치 = {g(vA0)}×{g(t_star)} - 1/2×{g(aA)}×{g(t_star)}² = {g(xA)} m\n"
-        f"   B의 위치 = {g(v)}×{g(t_star)} + 1/2×{g(aB)}×{g(t_star)}² = {g(xB)} m\n"
-        f"   최대 거리 = {g(xA)} - {g(xB)} = {g(gmax)} m = L ÷ 3 = {g(L)} ÷ 3  →  ㄷ  ○\n"
+        "[4단계] 두 차 사이의 최대 거리  →  ㄷ 판단\n"
+        "   ① 언제 최대?  A가 더 빠른 동안은 벌어지고, B가 더 빨라지면 좁아진다.\n"
+        "        →  두 속력이 같아지는 순간 거리가 최대\n"
+        "   ② 그 시각 :  v_A = v_B  에  v = v0 + a t  를 각각 적용\n"
+        f"        {g(vA0)} - {g(aA)}t = {g(v)} + {g(aB)}t    →    t = {g(t_star)} s    ( = T ÷ 2 )\n"
+        "   ③ 그래프로 : 그 시각까지 두 속력 그래프 사이의 넓이 = 거리 차 (삼각형)\n"
+        f"        1/2 × (T÷2) × (3v - v) = vT/2 = L/3 ,    숫자 : 1/2 × {g(t_star)} × ({g(vA0)} - {g(v)}) = {g(tri)} m\n"
+        f"   ④ 검산 (위치 식) :  A = {g(vA0)}×{g(t_star)} - 1/2×{g(aA)}×{g(t_star)}² = {g(xA)} m\n"
+        f"                       B = {g(v)}×{g(t_star)} + 1/2×{g(aB)}×{g(t_star)}² = {g(xB)} m\n"
+        f"        {g(xA)} - {g(xB)} = {g(gmax)} m = L ÷ 3    →    ㄷ  ○\n"
         "\n"
-        "[정답]   ㄱ ○,  ㄴ ×,  ㄷ ○     →     ③ ㄱ, ㄷ"
+        "[정답]   ㄱ ○ ,   ㄴ × ,   ㄷ ○       →       ③ ㄱ, ㄷ\n"
+        f"[점검]   Q 도착 때 위치 :  A = {g(xA_end)} m ,  B = {g(xB_end)} m   (둘 다 L = {g(L)} m 와 같다)"
     )
 
 
