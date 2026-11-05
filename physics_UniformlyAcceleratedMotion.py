@@ -40,7 +40,6 @@ BOX_FC = "#f7f7f7"
 BOX_EC = "#bbbbbb"
 
 # ---------- 문제 (2013학년도 수능 물리Ⅰ 3번 변형) ----------
-TITLE = "두 자동차 A, B의 등가속도 운동"
 
 # A가 P를 지나는 속력은 NA·v (원래 수능 문제는 NA = 4, 이 변형 문제는 NA = 3)
 NA = 3
@@ -57,11 +56,6 @@ PROBLEM = (
     "  ㄷ. A와 B 사이의 거리는 최대 $L/3$까지 증가한다.\n"
     "  \n"
     "① ㄱ   ② ㄴ   ③ ㄱ,ㄷ   ④ ㄴ,ㄷ   ⑤ ㄱ,ㄴ,ㄷ"
-)
-
-GUIDE = (
-    r"핵심 공식     $L=\frac{v_0+v}{2}\,T$ (평균 속력 × 시간 = 거리)     "
-    r"$a=\frac{v-v_0}{T}$ (속력 변화 ÷ 시간)     간격 최대 ⇔ 두 속력이 같아지는 순간"
 )
 
 VARS = ["v", "L", "p"]
@@ -144,10 +138,9 @@ def style_button(btn, size, color):
 
 
 # ----- 영역 배경 상자 -----
-add_box(0.015, 0.600, 0.400, 0.315)  # 문제
-add_box(0.015, 0.330, 0.400, 0.262)  # 변수 조절
-add_box(0.015, 0.072, 0.400, 0.250)  # 모범답안
-add_box(0.015, 0.012, 0.970, 0.052)  # 핵심 공식 안내
+add_box(0.015, 0.660, 0.400, 0.320)  # 문제
+add_box(0.015, 0.340, 0.400, 0.300)  # 변수 조절
+add_box(0.015, 0.035, 0.400, 0.285)  # 모범답안
 ANSWER_AREA = (
     0.015,
     0.415,
@@ -155,13 +148,11 @@ ANSWER_AREA = (
     0.322,
 )  # 마우스를 올리는 영역 (x0, x1, y0, y1)
 
-# ----- 1. 제목 -----
-add_text(0.5, 0.988, TITLE, 40, ha="center", va="top", weight="bold")
 
 # ----- 2. 문제 -----
 add_text(
     0.028,
-    0.905,
+    0.970,
     PROBLEM,
     16.4,
     color=PROBLEM_COLOR,
@@ -170,13 +161,10 @@ add_text(
     linespacing=1.3,
 )
 
-# ----- 7. 핵심 공식 안내 -----
-add_text(0.5, 0.038, GUIDE, 17, ha="center", va="center")
-
 # ----- 5. 그래프 (오른쪽) -----
-ax_road = fig.add_axes([0.440, 0.665, 0.545, 0.200])  # 도로 그림
-ax_vt = fig.add_axes([0.440, 0.395, 0.545, 0.205])  # 속력-시간 그래프
-ax_gap = fig.add_axes([0.440, 0.135, 0.545, 0.190])  # 거리 그래프
+ax_road = fig.add_axes([0.440, 0.680, 0.545, 0.280])  # 도로 그림
+ax_vt = fig.add_axes([0.440, 0.375, 0.545, 0.270])  # 속력-시간 그래프
+ax_gap = fig.add_axes([0.440, 0.060, 0.545, 0.270])  # 거리 그래프
 
 # ----- 6. 모범답안 (마우스를 올리면 보임) -----
 add_text(
@@ -189,16 +177,16 @@ add_text(
     va="top",
 )
 result_text = add_text(
-    0.028, 0.268, "", 15, va="top", alpha=0, linespacing=1.25
+    0.028, 0.268, "", 15, va="top", alpha=0, linespacing=1.60
 )
 
 # 상세 풀이 패널: 마우스를 올렸을 때만 오른쪽 그래프 위에 나타난다
 detail_box = add_box(
-    0.435, 0.075, 0.550, 0.835, fc="white", ec=PROBLEM_COLOR, lw=3, zorder=20
+    0.435, 0.035, 0.550, 0.930, fc="white", ec=PROBLEM_COLOR, lw=3, zorder=20
 )
 detail_box.set_visible(False)
-DETAIL_TOP = 0.895  # 첫 줄 위치
-DETAIL_STEP = 0.0208  # 줄 간격 (화면 높이 비율, 글꼴과 상관없이 고정)
+DETAIL_TOP = 0.930  # 첫 줄 위치
+DETAIL_STEP = 0.023  # 줄 간격 (화면 높이 비율, 글꼴과 상관없이 고정)
 DETAIL_MAX_LINES = 40
 detail_lines = []
 for _i in range(DETAIL_MAX_LINES):
@@ -670,18 +658,18 @@ def toggle_play(event):
 
 
 # ----- 3. 문제변경 자리에 재생 버튼 -----
-btn_play = Button(fig.add_axes([0.03, 0.540, 0.370, 0.040]), "재생")
+btn_play = Button(fig.add_axes([0.03, 0.574, 0.370, 0.040]), "재생")
 btn_play.on_clicked(toggle_play)
 style_button(btn_play, 15, BTN_COLOR)
 buttons.append(btn_play)
 
 # ----- 4. 변수 조절 -----
-y = 0.472
+y = 0.492
 for i in range(3):
     label = add_text(0.03, y + 0.0225, "", 15, weight="bold", va="center")
 
-    btn_minus = Button(fig.add_axes([0.205, y, 0.055, 0.045]), "-")
-    btn_plus = Button(fig.add_axes([0.345, y, 0.055, 0.045]), "+")
+    btn_minus = Button(fig.add_axes([0.205, y, 0.055, 0.055]), "-")
+    btn_plus = Button(fig.add_axes([0.345, y, 0.055, 0.055]), "+")
     btn_minus.on_clicked(make_click(i, -1))
     btn_plus.on_clicked(make_click(i, +1))
     for btn in (btn_minus, btn_plus):
